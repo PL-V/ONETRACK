@@ -7,26 +7,22 @@ $ venv\Scripts\activate
 $ pip install -r requirements.txt
 ```
 
-<br />
-
 > Set Up Database
-
+First of all create a postgresql db named OneTrack and update persistence in core/setting.py changing the password to your own password, then run the following commands:
 $ python manage.py makemigrations
 $ python manage.py migrate
 ```
 
-<br />
-
 > Start the app
 
-$ python manage.py runserver 9999
+$ python manage.py runserver 
 ```
 
 At this point, the app runs at `http://127.0.0.1:8000/`. 
 
 > Note: To use the app, access the registration page and create a new user. After authentication, the app will unlock the private pages.
 
-<br />
+
 
 ## File Structure
 Within the download you'll find the following directories and files:
@@ -80,7 +76,6 @@ Within the download you'll find the following directories and files:
    |-- ************************************************************************
 ```
 
-<br />
 
 > The bootstrap flow
 
