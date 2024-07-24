@@ -1,0 +1,132 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Report Vulnerability {% endblock %}
+
+{% block stylesheets %}
+<style>
+  body, html {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1c1e29;
+    color: #f8f9fa;
+    height: 100%;
+  }
+  .main-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .content {
+    max-width: 800px;
+    width: 100%;
+    background-color: #2e2f3a;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .card {
+    margin: 20px 0;
+  }
+  .card-header {
+    background-color: #3e4050;
+    color: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 5px 5px 0 0;
+  }
+  .card-title {
+    margin: 0;
+  }
+  .card-body {
+    padding: 20px;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #3e4050;
+    color: #f8f9fa;
+  }
+  .btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .btn:hover {
+    background-color: #0056b3;
+  }
+  label {
+    color: #f8f9fa;
+  }
+</style>
+{% endblock stylesheets %}
+
+{% load form_tags %}
+
+{% block content %}
+<div class="main-container">
+  <div class="content">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Report Vulnerability</h4>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            {{ form.vuln_name.label_tag }}
+            {{ form.vuln_name|add_class:"form-control" }}
+          </div>
+          <div class="form-group">
+            {{ form.vuln_type.label_tag }}
+            {{ form.vuln_type|add_class:"form-control" }}
+          </div>
+          <div class="form-group">
+            {{ form.vuln_severity.label_tag }}
+            {{ form.vuln_severity|add_class:"form-control" }}
+          </div>
+          <div class="form-group">
+            {{ form.vuln_description.label_tag }}
+            {{ form.vuln_description|add_class:"form-control" }}
+          </div>
+          <div class="form-group">
+            {{ form.cve.label_tag }}
+            {{ form.cve|add_class:"form-control" }}
+          </div>
+          <div class="form-group">
+            {{ form.risk.label_tag }}
+            {{ form.risk|add_class:"form-control" }}
+          </div>
+          <div class="form-group">
+            {{ form.source.label_tag }}
+            {{ form.source|add_class:"form-control" }}
+          </div>
+          <div class="form-group">
+            {{ form.reported_by.label_tag }}
+            {{ form.reported_by|add_class:"form-control" }}
+          </div>
+          <div class="form-group">
+            {{ form.asset.label_tag }}
+            {{ form.asset|add_class:"form-control" }}
+          </div>
+          <button type="submit" class="btn">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+{% endblock javascripts %}
