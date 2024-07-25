@@ -1,5 +1,5 @@
 from django import forms
-from .models import Vulnerability, User, Asset
+from .models import Vulnerability, User, Asset, Mission
 
 class VulnerabilityForm(forms.ModelForm):
     reported_by = forms.ModelChoiceField(queryset=User.objects.all(), label="Reported By")
@@ -16,4 +16,17 @@ class VulnerabilityForm(forms.ModelForm):
             'cve': 'CVE',
             'risk': 'Risk',
             'source': 'Source',
+        }
+
+
+
+class MissionStatusForm(forms.ModelForm):
+    class Meta:
+        model = Mission
+        fields = ['state']
+        labels = {
+            'state': 'Status',
+        }
+        widgets = {
+            'state': forms.Select(attrs={'class': 'form-control'}),
         }

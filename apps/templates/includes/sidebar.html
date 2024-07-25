@@ -5,6 +5,9 @@
       -->
         <div class="sidebar-wrapper">
             <div class="logo">
+                <a href="javascript:void(0)" class="simple-text logo-mini">
+                    N+
+                </a>
                 <a href="javascript:void(0)" class="simple-text logo-normal">
                     OneTrack
                 </a>
@@ -13,7 +16,13 @@
                 <li class="{% if 'index' in segment %} active {% endif %} ">
                     <a href="/">
                         <i class="tim-icons icon-chart-pie-36"></i>
-                        <p>Dashboard</p>
+                        <p>Tracking</p>
+                    </a>
+                </li>
+                <li>
+                    <a href={% url 'mission_list' %}>
+                        <i class="tim-icons icon-atom"></i>
+                        <p>Missions</p>
                     </a>
                 </li>
                 <li>

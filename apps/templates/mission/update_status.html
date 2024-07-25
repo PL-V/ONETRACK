@@ -1,0 +1,17 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Update Mission Status {% endblock %}
+
+{% block content %}
+  <div class="content">
+    <h2>Update Mission Status</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        {{ form.state.label_tag }}
+        {{ form.state }}
+      </div>
+      <button type="submit" class="btn btn-primary">Update Status</button>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Mission List {% endblock %}
+
+{% block content %}
+  <div class="content">
+    <h2>Mission List</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>State</th>
+          <th>Asset</th>
+          <th>Vulnerability</th>
+          <th>Priority</th>
+          <th>Due Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mission in missions %}
+        <tr>
+          <td>{{ mission.mission_id }}</td>
+          <td>{{ mission.state }}</td>
+          <td>{{ mission.asset.asset_name }}</td>
+          <td>{{ mission.vulnerability.vuln_name }}</td>
+          <td>{{ mission.priority }}</td>
+          <td>{{ mission.due_date }}</td>
+          <td>
+            <a href="{% url 'mission_detail' mission.mission_id %}" class="btn btn-primary">View</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
