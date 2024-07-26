@@ -1,32 +1,7 @@
 from django.db import models
 import uuid
+from ..authentication.models import User
 
-class Role(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    role_choices = [
-        ('Reporter', 'Reporter'),
-        ('Owner', 'Owner'),
-        ('Remediator', 'Remediator'),
-        ('Verifier', 'Verifier'),
-        ('Superuser', 'Superuser'),
-    ]
-    role = models.CharField(max_length=20, choices=role_choices)
-
-    class Meta:
-        db_table = 'role'
-
-class User(models.Model):   #should be changed
-    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE)
-    username = models.CharField(max_length=255, unique=True)
-    password = models.CharField(max_length=255)
-    team = models.CharField(max_length=255, null=True, blank=True)
-    phone_number = models.CharField(max_length=15, null=True, blank=True)
-
-    class Meta:
-        db_table = 'user'
 
 class Asset(models.Model):
     asset_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

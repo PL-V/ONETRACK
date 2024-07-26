@@ -1,11 +1,10 @@
 from django.contrib import admin
 from .models import (
-    Role, User, Asset, Vulnerability, Mission, MissionHistory,
+    Asset, Vulnerability, Mission, MissionHistory,
     Notification, Metric, Status, ComponentType, Component, AttackMapping
 )
+from ..authentication.models import User
 
-admin.site.register(Role)
-admin.site.register(User)
 admin.site.register(Asset)
 admin.site.register(Vulnerability)
 admin.site.register(Mission)

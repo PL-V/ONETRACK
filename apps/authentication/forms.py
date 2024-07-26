@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-
+from .models import User
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -19,7 +18,6 @@ class LoginForm(forms.Form):
             }
         ))
 
-
 class SignUpForm(UserCreationForm):
     username = forms.CharField(
         widget=forms.TextInput(
@@ -35,6 +33,19 @@ class SignUpForm(UserCreationForm):
                 "class": "form-control"
             }
         ))
+    name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Name (optional)",
+                "class": "form-control"
+            }
+        ))
+    role = forms.ChoiceField(
+        choices=User.ROLE_CHOICES, 
+        required=False,
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
     password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
@@ -52,4 +63,4 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'name', 'role', 'password1', 'password2')

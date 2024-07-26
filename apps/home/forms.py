@@ -1,5 +1,6 @@
 from django import forms
-from .models import Vulnerability, User, Asset, Mission
+from .models import Vulnerability, Asset, Mission
+from ..authentication.models import User
 
 class VulnerabilityForm(forms.ModelForm):
     reported_by = forms.ModelChoiceField(queryset=User.objects.all(), label="Reported By")
