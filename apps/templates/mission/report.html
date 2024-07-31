@@ -71,6 +71,17 @@
     display: block;
     margin-bottom: 5px;
   }
+  .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+  }
+  .alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+  }
 </style>
 {% endblock stylesheets %}
 
@@ -79,12 +90,19 @@
 {% block content %}
 <div class="main-container">
   <div class="content">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
     <div class="card">
       <div class="card-header">
         <h4 class="card-title">Report Vulnerability</h4>
       </div>
       <div class="card-body">
-        <form method="post">
+        <form method="post" action="{% url 'report_vulnerability' %}">
           {% csrf_token %}
           <div class="form-group">
             {{ form.vuln_name.label_tag }}
@@ -113,10 +131,6 @@
           <div class="form-group">
             {{ form.source.label_tag }}
             {{ form.source|add_class:"form-control" }}
-          </div>
-          <div class="form-group">
-            {{ form.reported_by.label_tag }}
-            {{ form.reported_by|add_class:"form-control" }}
           </div>
           <div class="form-group">
             {{ form.asset.label_tag }}

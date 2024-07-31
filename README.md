@@ -2,10 +2,10 @@
 
 > Install modules via `VENV`  
 
+```bash
 $ virtualenv venv
 $ venv\Scripts\activate
 $ pip install -r requirements.txt
-```
 
 > Set Up Database
 First of all create a postgresql db named OneTrack and update persistence in core/setting.py changing the password to your own password, then run the following commands:
@@ -36,9 +36,9 @@ Within the download you'll find the following directories and files:
    |
    |-- apps/
    |    |
-   |    |-- home/                          # A simple app that serve HTML files
-   |    |    |-- views.py                  # Serve HTML pages for authenticated users
-   |    |    |-- urls.py                   # Define some super simple routes  
+   |    |-- home/                          # the main app
+   |    |    |-- views.py                  # Serve HTML pages
+   |    |    |-- urls.py                   # Define routes  
    |    |
    |    |-- authentication/                # Handles auth routes (login and register)
    |    |    |-- urls.py                   # Define authentication routes  
@@ -63,12 +63,17 @@ Within the download you'll find the following directories and files:
    |         |    |-- login.html            # Login page
    |         |    |-- register.html         # Register page
    |         |
-   |         |-- home/                      # UI Kit Pages
+   |         |-- home/                      # UI Kit Pages for basic home pages
    |              |-- index.html            # Index page
    |              |-- 404-page.html         # 404 page
    |              |-- *.html                # All other pages
+   |         |
+   |         |-- mission/                      # UI Kit Pages for the main logic 
+   |              |-- report.html           # report vulnerability page
+   |              |-- mission_list.html     # missions page
+   |              |-- *.html                # All other pages
    |
-   |-- requirements.txt                     # Development modules - SQLite storage
+   |-- requirements.txt                     # Development modules - PostgreSql storage
    |
    |-- .env                                 # Inject Configuration via Environment
    |-- manage.py                            # Start the app - Django default start script

@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from .forms import VulnerabilityForm, MissionStatusForm
 import datetime
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 
 
 @login_required(login_url="/login/")
@@ -23,24 +24,30 @@ def pages(request):
     context = {}
     try:
         load_template = request.path.split('/')[-1]
+
         if load_template == 'admin':
             return HttpResponseRedirect(reverse('admin:index'))
+        
         context['segment'] = load_template
 
+        # Check if the path contains 'mission' and handle accordingly
+        if load_template == 'report_vulnerability':
+            return redirect('mission/report.html')
+
+        # Render the generic template
         html_template = loader.get_template('home/' + load_template)
         return HttpResponse(html_template.render(context, request))
 
     except template.TemplateDoesNotExist:
-        # Log the error or print a message for debugging
         print(f"Template {load_template} does not exist.")
         html_template = loader.get_template('home/page-404.html')
         return HttpResponse(html_template.render(context, request))
 
     except Exception as e:
-        # Log the error or print a message for debugging
         print(f"An error occurred: {e}")
         html_template = loader.get_template('home/page-500.html')
         return HttpResponse(html_template.render(context, request))
+
 #-------------------------------------------------------------------------------------------------
 
     
@@ -67,12 +74,14 @@ def report_vulnerability(request):
                 asset=vulnerability.asset,
                 vulnerability=vulnerability,
                 priority=vulnerability.vuln_severity,
-                due_date=datetime.date.today() + datetime.timedelta(days=30)  # Example due date logic
+                due_date=datetime.date.today() 
             )
-            return redirect('vulnerability_list')
+            messages.success(request, 'Vulnerability reported successfully.')
+            return redirect('report_vulnerability')
     else:
-        form = VulnerabilityForm(initial={'reported_by': request.user})
+        form = VulnerabilityForm()
     return render(request, 'mission/report.html', {'form': form})
+
 #-------------------------------------------------------------------------------------------------
 
 
@@ -94,7 +103,7 @@ def update_mission_status(request, id):
         form = MissionStatusForm(request.POST, instance=mission)
         if form.is_valid():
             form.save()
-            return redirect('mission/mission_detail', id=mission.mission_id)
+            return redirect('mission_list')
     else:
         form = MissionStatusForm(instance=mission)
     return render(request, 'mission/update_status.html', {'form': form, 'mission': mission})
