@@ -1,44 +1,47 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Mission Detail {% endblock %}
+{% block title %}Mission Detail{% endblock %}
 
 {% block content %}
-  <div class="content">
+<div class="content">
     <h2>Mission Detail</h2>
     <table class="table">
-      <tr>
-        <th>ID</th>
-        <td>{{ mission.mission_id }}</td>
-      </tr>
-      <tr>
-        <th>State</th>
-        <td>{{ mission.state }}</td>
-      </tr>
-      <tr>
-        <th>Asset</th>
-        <td>{{ mission.asset.asset_name }}</td>
-      </tr>
-      <tr>
-        <th>Vulnerability</th>
-        <td>{{ mission.vulnerability.vuln_name }}</td>
-      </tr>
-      <tr>
-        <th>Priority</th>
-        <td>{{ mission.priority }}</td>
-      </tr>
-      <tr>
-        <th>Due Date</th>
-        <td>{{ mission.due_date }}</td>
-      </tr>
-      <tr>
-        <th>Created Date</th>
-        <td>{{ mission.created_date }}</td>
-      </tr>
-      <tr>
-        <th>Closed Date</th>
-        <td>{{ mission.closed_date }}</td>
-      </tr>
+        <tr>
+            <th>ID</th>
+            <td>{{ mission.mission_id }}</td>
+        </tr>
+        <tr>
+            <th>State</th>
+            <td>{{ mission.state }}</td>
+        </tr>
+        <tr>
+            <th>Asset</th>
+            <td>{{ mission.asset.asset_name }}</td>
+        </tr>
+        <tr>
+            <th>Vulnerability</th>
+            <td>{{ mission.vulnerability.vuln_name }}</td>
+        </tr>
+        <tr>
+            <th>Priority</th>
+            <td>{{ mission.priority }}</td>
+        </tr>
+        <tr>
+            <th>Due Date</th>
+            <td>{{ mission.due_date }}</td>
+        </tr>
+        <tr>
+            <th>Created Date</th>
+            <td>{{ mission.created_date }}</td>
+        </tr>
+        <tr>
+            <th>Closed Date</th>
+            <td>{{ mission.closed_date }}</td>
+        </tr>
     </table>
     <a href="{% url 'update_mission_status' mission.mission_id %}" class="btn btn-primary">Update Status</a>
-  </div>
+    {% if user.role == 'Owner' %}
+        <a href="{% url 'assign_mission' mission.mission_id %}" class="btn btn-primary">Assign to Remediator</a>
+    {% endif %}
+</div>
 {% endblock %}

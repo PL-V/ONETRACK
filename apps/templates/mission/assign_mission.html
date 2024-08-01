@@ -1,0 +1,48 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Assign Mission{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body, html {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #1c1e29;
+      color: #f8f9fa;
+      height: 100%;
+    }
+    .main-container {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="main-container">
+  <div class="content">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+    <h2>Assign Mission: {{ mission.mission_id }}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_assigned_to">Assign to Remediator:</label>
+            {{ form.assigned_to }}
+        </div>
+        <button type="submit" class="btn btn-primary">Assign</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -5,48 +5,13 @@ from django.template import loader
 from django.urls import reverse
 from .models import Vulnerability, Mission
 from django.shortcuts import render, redirect
-from .forms import VulnerabilityForm, MissionStatusForm
+from .forms import VulnerabilityForm, MissionStatusForm, MissionAssignForm
 import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
 
-@login_required(login_url="/login/")
-def index(request):
-    context = {'segment': 'index'}
 
-    html_template = loader.get_template('home/index.html')
-    return HttpResponse(html_template.render(context, request))
-
-
-@login_required(login_url="/login/")
-def pages(request):
-    context = {}
-    try:
-        load_template = request.path.split('/')[-1]
-
-        if load_template == 'admin':
-            return HttpResponseRedirect(reverse('admin:index'))
-        
-        context['segment'] = load_template
-
-        # Check if the path contains 'mission' and handle accordingly
-        if load_template == 'report_vulnerability':
-            return redirect('mission/report.html')
-
-        # Render the generic template
-        html_template = loader.get_template('home/' + load_template)
-        return HttpResponse(html_template.render(context, request))
-
-    except template.TemplateDoesNotExist:
-        print(f"Template {load_template} does not exist.")
-        html_template = loader.get_template('home/page-404.html')
-        return HttpResponse(html_template.render(context, request))
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        html_template = loader.get_template('home/page-500.html')
-        return HttpResponse(html_template.render(context, request))
 
 #-------------------------------------------------------------------------------------------------
 
@@ -107,4 +72,31 @@ def update_mission_status(request, id):
     else:
         form = MissionStatusForm(instance=mission)
     return render(request, 'mission/update_status.html', {'form': form, 'mission': mission})
+#-------------------------------------------------------------------------------------------------
+
+# Assigning missions
+@login_required(login_url="/login/")
+def assign_mission(request, id):
+    mission = get_object_or_404(Mission, mission_id=id)
+    if request.user.role != 'Owner':
+        messages.error(request, 'You do not have permission to assign missions.')
+        return redirect('mission_detail', id=id)
+
+    if request.method == 'POST':
+        form = MissionAssignForm(request.POST, instance=mission)
+        if form.is_valid():
+            assigned_user = form.cleaned_data['assigned_to']
+            mission = form.save(commit=False)
+            mission.state = 'Assigned'
+            mission.save()
+            # Update the associated vulnerability's assigned_to attribute
+            mission.vulnerability.assigned_to = assigned_user
+            mission.vulnerability.save()
+            
+            messages.success(request, 'Mission assigned successfully.')
+            return redirect('assign_mission', id=id)
+    else:
+        form = MissionAssignForm(instance=mission)
+    
+    return render(request, 'mission/assign_mission.html', {'form': form, 'mission': mission})
 #-------------------------------------------------------------------------------------------------

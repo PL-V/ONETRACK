@@ -27,3 +27,11 @@ class MissionStatusForm(forms.ModelForm):
         widgets = {
             'state': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter mission status'}),
         }
+
+
+class MissionAssignForm(forms.ModelForm):
+    assigned_to = forms.ModelChoiceField(queryset=User.objects.filter(role='Remediator'), label="Assign to Remediator")
+
+    class Meta:
+        model = Mission
+        fields = ['assigned_to']
