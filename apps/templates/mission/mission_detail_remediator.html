@@ -1,0 +1,61 @@
+
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}
+<style>
+    body, html {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #1c1e29;
+      color: #f8f9fa;
+      height: 100%;
+    }
+    .main-container {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .mission-details {
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        background-color: #272b36;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    h2, h3 {
+        text-align: center;
+    }
+    p, form {
+        margin: 10px 0;
+    }
+    .btn-primary {
+        display: block;
+        width: 100%;
+        margin-top: 15px;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="main-container">
+    <div class="mission-details">
+        <h2>Mission Details</h2>
+        <p><strong>Priority:</strong> {{ mission.priority }}</p>
+        <p><strong>Due Date:</strong> {{ mission.due_date }}</p>
+        <p><strong>State:</strong> {{ mission.state }}</p>
+
+        <h3>Update Mission State</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Update State</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

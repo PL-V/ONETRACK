@@ -23,14 +23,13 @@ class VulnerabilityForm(forms.ModelForm):
 class MissionStatusForm(forms.ModelForm):
     class Meta:
         model = Mission
-        fields = ['state']
+        fields = ['status']
         widgets = {
-            'state': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter mission status'}),
+            'status': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Select mission status'}),
         }
 
-
 class MissionAssignForm(forms.ModelForm):
-    assigned_to = forms.ModelChoiceField(queryset=User.objects.filter(role='Remediator'), label="Assign to Remediator")
+    assigned_to = forms.ModelChoiceField(queryset=User.objects.filter(roles__name='Remediator'), label="Assign to Remediator")
 
     class Meta:
         model = Mission

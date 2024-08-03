@@ -1,6 +1,33 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from .models import User, Role
+
+class CustomUserCreationForm(UserCreationForm):
+    roles = forms.MultipleChoiceField(
+        choices=Role.get_role_choices(),
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('username', 'name', 'email', 'password1', 'password2', 'roles', 'team', 'is_active', 'is_staff', 'is_superuser')
+
+
+
+class CustomUserChangeForm(UserChangeForm):
+    roles = forms.MultipleChoiceField(
+        choices=Role.get_role_choices(),
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
+    class Meta(UserChangeForm.Meta):
+        model = User
+        fields = ('username', 'name', 'email', 'roles', 'team', 'is_active', 'is_staff', 'is_superuser')
+
+
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -42,7 +69,7 @@ class SignUpForm(UserCreationForm):
             }
         ))
     role = forms.ChoiceField(
-        choices=User.ROLE_CHOICES, 
+        choices=Role.ROLE_CHOICES, 
         required=False,
         widget=forms.Select(attrs={"class": "form-control"})
     )

@@ -1,7 +1,4 @@
-from django import template
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import loader
 from django.urls import reverse
 from .models import Vulnerability, Mission
 from django.shortcuts import render, redirect
@@ -78,7 +75,8 @@ def update_mission_status(request, id):
 @login_required(login_url="/login/")
 def assign_mission(request, id):
     mission = get_object_or_404(Mission, mission_id=id)
-    if request.user.role != 'Owner':
+    if not (request.user.roles.filter(name='Owner').exists() or 
+            request.user.roles.filter(name='Superuser').exists()):
         messages.error(request, 'You do not have permission to assign missions.')
         return redirect('mission_detail', id=id)
 
@@ -99,4 +97,31 @@ def assign_mission(request, id):
         form = MissionAssignForm(instance=mission)
     
     return render(request, 'mission/assign_mission.html', {'form': form, 'mission': mission})
+#-------------------------------------------------------------------------------------------------
+
+# View to list vulnerabilities assigned to the logged-in Remediator
+@login_required
+def assigned_vulnerabilities(request):
+    vulnerabilities = Vulnerability.objects.filter(assigned_to=request.user)
+    return render(request, 'mission/assigned_vulnerabilities.html', {'vulnerabilities': vulnerabilities})
+
+# View to display mission details and allow state update
+@login_required
+def mission_detail_for_remediator(request, id):
+    mission = get_object_or_404(Mission, mission_id=id)
+    if request.user != mission.vulnerability.assigned_to:
+        messages.error(request, 'You do not have permission to view this mission.')
+        return redirect('assigned_vulnerabilities')
+
+    if request.method == 'POST':
+        form = MissionStatusForm(request.POST, instance=mission)
+        if form.is_valid():
+            mission.state = 'Remediation in Progress'
+            form.save()
+            messages.success(request, 'Mission state updated to "Remediation in Progress".')
+            return redirect('assigned_vulnerabilities')
+    else:
+        form = MissionStatusForm(instance=mission)
+
+    return render(request, 'mission/mission_detail_remediator.html', {'mission': mission, 'form': form})
 #-------------------------------------------------------------------------------------------------

@@ -1,8 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 import os, environ
 
 env = environ.Env(
@@ -83,7 +78,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'OneTrack',
+        'NAME': 'OneTrackV2',
         'USER': 'postgres',
         'PASSWORD': 'Im@d131#',
         'HOST': 'localhost',

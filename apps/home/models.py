@@ -1,10 +1,9 @@
 from django.db import models
-import uuid
 from ..authentication.models import User
-
+import uuid
 
 class Asset(models.Model):
-    asset_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    asset_id = models.AutoField(primary_key=True)
     asset_name = models.CharField(max_length=255)
     asset_category = models.CharField(max_length=255)
     asset_type = models.CharField(max_length=255)
@@ -19,8 +18,9 @@ class Asset(models.Model):
     class Meta:
         db_table = 'asset'
 
+
 class Vulnerability(models.Model):
-    vuln_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    vuln_id = models.AutoField(primary_key=True)
     mapping_id = models.CharField(max_length=255)
     vuln_name = models.CharField(max_length=255)
     vuln_type = models.CharField(max_length=255)
@@ -37,9 +37,10 @@ class Vulnerability(models.Model):
     class Meta:
         db_table = 'vulnerability'
 
+
 class Mission(models.Model):
     mission_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    state = models.CharField(max_length=255)
+    status = models.ForeignKey('Status', on_delete=models.CASCADE, null=True)  # Changed field
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
     vulnerability = models.ForeignKey(Vulnerability, on_delete=models.CASCADE)
     priority = models.CharField(max_length=255)
@@ -50,8 +51,26 @@ class Mission(models.Model):
     class Meta:
         db_table = 'mission'
 
+
+class Status(models.Model):
+    status_id = models.AutoField(primary_key=True)
+    status_choices = [
+        ('Reported', 'Reported'),
+        ('Assigned', 'Assigned'),
+        ('In Remediation', 'In Remediation'),
+        ('Remediated', 'Remediated'),
+        ('In Verification', 'In Verification'),
+        ('Verified', 'Verified'),
+        ('Closed', 'Closed'),
+    ]
+    status = models.CharField(max_length=20, choices=status_choices)
+
+    class Meta:
+        db_table = 'status'
+
+
 class MissionHistory(models.Model):
-    mission_history_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    mission_history_id = models.AutoField(primary_key=True)
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     change_date = models.DateTimeField(auto_now_add=True)
@@ -61,7 +80,7 @@ class MissionHistory(models.Model):
         db_table = 'mission_history'
 
 class Notification(models.Model):
-    notification_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    notification_id = models.AutoField(primary_key=True)
     recipient = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
     sent_date = models.DateTimeField(auto_now_add=True)
@@ -69,8 +88,9 @@ class Notification(models.Model):
     class Meta:
         db_table = 'notification'
 
+
 class Metric(models.Model):
-    metric_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    metric_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     value = models.FloatField()
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
@@ -78,30 +98,19 @@ class Metric(models.Model):
     class Meta:
         db_table = 'metric'
 
-class Status(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    status_choices = [
-        ('Reported', 'Reported'),
-        ('Assigned', 'Assigned'),
-        ('In Progress', 'In Progress'),
-        ('Remediated', 'Remediated'),
-        ('Verified', 'Verified'),
-        ('Closed', 'Closed'),
-    ]
-    status = models.CharField(max_length=20, choices=status_choices)
 
-    class Meta:
-        db_table = 'status'
+
 
 class ComponentType(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True)
     type = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'component_type'
 
+
 class Component(models.Model):
-    component_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    component_id = models.AutoField(primary_key=True)
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
     component_type = models.ForeignKey(ComponentType, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
@@ -109,12 +118,3 @@ class Component(models.Model):
 
     class Meta:
         db_table = 'component'
-
-class AttackMapping(models.Model):
-    attack_mapping_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    exploit_type = models.CharField(max_length=255)
-    primary_impact = models.IntegerField()
-    secondary_impact = models.IntegerField()
-
-    class Meta:
-        db_table = 'attack_mapping'

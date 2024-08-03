@@ -31,12 +31,26 @@
                         <p>Reporting</p>
                     </a>
                 </li>
+                <li>
+                    <a href={% url 'assigned_vulnerabilities' %}>
+                        <i class="tim-icons icon-atom"></i>
+                        <p>Remediation</p>
+                    </a>
+                </li>
                 <li >
                     <a href={% url 'vulnerability_list' %}>
                         <i class="tim-icons icon-puzzle-10"></i>
                         <p>Vulnerabilities</p>
                     </a>
                 </li>
+                {% if user.is_superuser %}
+                <li>
+                    <a href="{% url 'admin:index' %}">
+                        <i class="tim-icons icon-settings"></i>
+                        <p>Admin</p>
+                    </a>
+                </li>
+                {% endif %}
                 {% comment %}      
                 <li class="{% if 'notifications' in segment %} active {% endif %}">
                     <a href="/notifications.html">

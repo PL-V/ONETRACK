@@ -16,6 +16,9 @@ urlpatterns = [
     path('missions/<uuid:id>/', views.mission_detail, name='mission_detail'),
     path('missions/update_status/<uuid:id>/', views.update_mission_status, name='update_mission_status'),
     path('missions/assign/<uuid:id>/', views.assign_mission, name='assign_mission'),
+    path('assigned_vulnerabilities/', views.assigned_vulnerabilities, name='assigned_vulnerabilities'),
+    path('missions/remediator/<uuid:id>/', views.mission_detail_for_remediator, name='mission_detail_for_remediator'),
+    
     # Matches any html file
     # re_path(r'^.*\.*', views.pages, name='pages'),
 

@@ -40,7 +40,7 @@
         </tr>
     </table>
     <a href="{% url 'update_mission_status' mission.mission_id %}" class="btn btn-primary">Update Status</a>
-    {% if user.role == 'Owner' %}
+    {% if 'Owner' in user.roles.values_list('name', flat=True) or 'Superuser' in user.roles.values_list('name', flat=True) %}
         <a href="{% url 'assign_mission' mission.mission_id %}" class="btn btn-primary">Assign to Remediator</a>
     {% endif %}
 </div>
