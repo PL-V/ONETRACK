@@ -23,6 +23,7 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
     search_fields = ('username', 'email', 'name')
     ordering = ('username',)
+
     def save_model(self, request, obj, form, change):
         if not change:
             # Save the user without roles first
@@ -33,13 +34,14 @@ class CustomUserAdmin(UserAdmin):
                 role = Role.objects.create(name=role_name)
                 obj.roles.add(role)
         else:
-            obj.save()
             # Update roles if the user is being changed
-            roles = form.cleaned_data.get('roles', [])
-            obj.roles.clear()
+            roles = form.cleaned_data.pop('roles', [])
+            obj.save()
+            obj.roles.clear()        #clear roles first
             for role_name in roles:
                 role = Role.objects.create(name=role_name)
                 obj.roles.add(role)
+
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Role)

@@ -13,12 +13,10 @@ urlpatterns = [
     path('report_vulnerability/', views.report_vulnerability, name='report_vulnerability'),
     
     path('missions/', views.mission_list, name='mission_list'),
-    path('missions/<uuid:id>/', views.mission_detail, name='mission_detail'),
-    path('missions/update_status/<uuid:id>/', views.update_mission_status, name='update_mission_status'),
-    path('missions/assign/<uuid:id>/', views.assign_mission, name='assign_mission'),
-    path('assigned_vulnerabilities/', views.assigned_vulnerabilities, name='assigned_vulnerabilities'),
-    path('missions/remediator/<uuid:id>/', views.mission_detail_for_remediator, name='mission_detail_for_remediator'),
-    
+    path('missions/<uuid:mission_id>/', views.mission_detail, name='mission_detail'),
+    path('missions/assign/<uuid:mission_id>/', views.assign_mission, name='assign_mission'),
+    path('create_mission/', views.create_mission, name='create_mission'),
+    path('missions/start_remediation/<uuid:mission_id>/', views.start_remediation, name='start_remediation'),
     # Matches any html file
     # re_path(r'^.*\.*', views.pages, name='pages'),
 

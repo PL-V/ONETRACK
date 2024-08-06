@@ -1,0 +1,47 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}
+<style>
+    .container {
+        display: flex;
+        height: 70vh;
+        padding-left: 100px; 
+    }
+    .table-container {
+        width: 90%;
+        margin: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="table-container">
+        <h2 class="text-center mb-4">Assigned Missions</h2>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Mission ID</th>
+                    <th>Priority</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mission in missions %}
+                <tr>
+                    <td>{{ mission.mission_id }}</td>
+                    <td>{{ mission.priority }}</td>
+                    <td>{{ mission.due_date }}</td>
+                    <td>{{ mission.status }}</td>
+                    <td>
+                        <a href="{% url 'mission_detail_for_remediator' mission.mission_id %}" class="btn btn-primary btn-sm">View Mission</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

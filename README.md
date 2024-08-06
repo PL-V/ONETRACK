@@ -8,7 +8,7 @@ $ venv\Scripts\activate
 $ pip install -r requirements.txt
 
 > Set Up Database
-First of all create a postgresql db named OneTrack and update persistence in core/setting.py changing the password to your own password, then run the following commands:
+First of all create a postgresql db named OneTrackV2 and update persistence in core/setting.py changing the password to your own password, then run the following commands:
 $ python manage.py makemigrations
 $ python manage.py migrate
 ```

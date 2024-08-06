@@ -19,10 +19,9 @@ class CustomUserManager(BaseUserManager):
         user = self.create_user(username, email, password, **extra_fields)
 
         # Assign the Superuser role
-        superuser_role, created = Role.objects.get_or_create(name='Superuser')
+        superuser_role = Role.objects.create(name='Superuser')
         user.roles.add(superuser_role)
         return user
-
 
 
 class Role(models.Model):

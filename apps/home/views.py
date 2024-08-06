@@ -1,18 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from .models import Vulnerability, Mission
+from .models import Vulnerability, Mission, MissionHistory
 from django.shortcuts import render, redirect
-from .forms import VulnerabilityForm, MissionStatusForm, MissionAssignForm
+from .forms import VulnerabilityForm, MissionStatusForm, MissionAssignForm,  MissionForm
 import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-
-
+from django.utils import timezone
 
 
 #-------------------------------------------------------------------------------------------------
 
-    
 # Listing vulnerabilities
 @login_required
 def vulnerability_list(request):
@@ -48,80 +46,125 @@ def report_vulnerability(request):
 
 
 # Mission Interface
+
 @login_required
 def mission_list(request):
-    missions = Mission.objects.all()
-    return render(request, 'mission/mission_list.html', {'missions': missions})
-
-@login_required
-def mission_detail(request, id):
-    mission = get_object_or_404(Mission, mission_id=id)
-    return render(request, 'mission/mission_detail.html', {'mission': mission})
-
-@login_required
-def update_mission_status(request, id):
-    mission = get_object_or_404(Mission, mission_id=id)
-    if request.method == 'POST':
-        form = MissionStatusForm(request.POST, instance=mission)
-        if form.is_valid():
-            form.save()
-            return redirect('mission_list')
+    user_roles = request.user.roles.values_list('name', flat=True)
+    
+    if request.user.is_superuser:
+        missions = Mission.objects.all()
     else:
-        form = MissionStatusForm(instance=mission)
-    return render(request, 'mission/update_status.html', {'form': form, 'mission': mission})
+        missions = Mission.objects.filter(vulnerability__assigned_to=request.user)
+    
+    context = {
+        'missions': missions,
+        'user_roles': user_roles,
+    }
+    
+    return render(request, 'mission/mission_list.html', context)
+
+@login_required
+def mission_detail(request, mission_id):
+    mission = get_object_or_404(Mission, mission_id=mission_id)
+    user_roles = request.user.roles.values_list('name', flat=True)
+    context = {
+        'mission': mission,
+        'user_roles': user_roles,
+    }
+    return render(request, 'mission/mission_detail.html', context)
+
+@login_required
+def start_remediation(request, mission_id):
+    mission = get_object_or_404(Mission, mission_id=mission_id)
+    mission.status = 'In Remediation'
+    mission.save()
+    messages.success(request, 'Mission status updated to "In Remediation".')
+    return redirect('mission_detail', mission_id=mission_id)
+
+
 #-------------------------------------------------------------------------------------------------
+
 
 # Assigning missions
 @login_required(login_url="/login/")
-def assign_mission(request, id):
-    mission = get_object_or_404(Mission, mission_id=id)
-    if not (request.user.roles.filter(name='Owner').exists() or 
-            request.user.roles.filter(name='Superuser').exists()):
-        messages.error(request, 'You do not have permission to assign missions.')
-        return redirect('mission_detail', id=id)
+def assign_mission(request, mission_id):
+    mission = get_object_or_404(Mission, mission_id=mission_id)
+    # if not (request.user.roles.filter(name='Owner').exists() or 
+    #         request.user.roles.filter(name='Superuser').exists()):
+    #     messages.error(request, 'You do not have permission to assign missions.')
+    #     return redirect('mission_detail', mission_id=mission_id)
 
     if request.method == 'POST':
         form = MissionAssignForm(request.POST, instance=mission)
         if form.is_valid():
             assigned_user = form.cleaned_data['assigned_to']
             mission = form.save(commit=False)
-            mission.state = 'Assigned'
+            mission.status = 'Assigned'
             mission.save()
             # Update the associated vulnerability's assigned_to attribute
             mission.vulnerability.assigned_to = assigned_user
             mission.vulnerability.save()
             
             messages.success(request, 'Mission assigned successfully.')
-            return redirect('assign_mission', id=id)
+            return redirect('assign_mission', mission_id=mission_id)
     else:
         form = MissionAssignForm(instance=mission)
     
     return render(request, 'mission/assign_mission.html', {'form': form, 'mission': mission})
 #-------------------------------------------------------------------------------------------------
 
-# View to list vulnerabilities assigned to the logged-in Remediator
-@login_required
-def assigned_vulnerabilities(request):
-    vulnerabilities = Vulnerability.objects.filter(assigned_to=request.user)
-    return render(request, 'mission/assigned_vulnerabilities.html', {'vulnerabilities': vulnerabilities})
 
-# View to display mission details and allow state update
-@login_required
-def mission_detail_for_remediator(request, id):
-    mission = get_object_or_404(Mission, mission_id=id)
-    if request.user != mission.vulnerability.assigned_to:
-        messages.error(request, 'You do not have permission to view this mission.')
-        return redirect('assigned_vulnerabilities')
 
+
+# New mission section:
+@login_required
+def create_mission(request):
     if request.method == 'POST':
-        form = MissionStatusForm(request.POST, instance=mission)
+        form = MissionForm(request.POST)
         if form.is_valid():
-            mission.state = 'Remediation in Progress'
-            form.save()
-            messages.success(request, 'Mission state updated to "Remediation in Progress".')
-            return redirect('assigned_vulnerabilities')
-    else:
-        form = MissionStatusForm(instance=mission)
+            vuln_name = form.cleaned_data['vuln_name']
+            vuln_type = form.cleaned_data['vuln_type']
+            vuln_severity = form.cleaned_data['vuln_severity']
+            vuln_description = form.cleaned_data['vuln_description']
+            cve = form.cleaned_data['cve']
+            risk = form.cleaned_data['risk']
+            source = form.cleaned_data['source']
+            assets = form.cleaned_data['assets']
 
-    return render(request, 'mission/mission_detail_remediator.html', {'mission': mission, 'form': form})
+            # Create a single vulnerability entry with multiple assets
+            vulnerability = Vulnerability.objects.create(
+                vuln_name=vuln_name,
+                vuln_type=vuln_type,
+                vuln_severity=vuln_severity,
+                vuln_description=vuln_description,
+                cve=cve,
+                risk=risk,
+                source=source,
+                reported_by=request.user
+            )
+            vulnerability.asset.set(assets)  # Assuming assets is a ManyToManyField in the Vulnerability model
+
+            # Create a mission for the vulnerability
+            mission = Mission.objects.create(
+                status='Reported',
+                priority=vuln_severity,
+                due_date=timezone.now().date(),
+                vulnerability=vulnerability
+            )
+            mission.asset.set(assets)  # Assuming assets is a ManyToManyField in the Mission model
+
+            # Create initial mission history
+            MissionHistory.objects.create(
+                mission=mission,
+                user=request.user,
+                state_on_change_date='Mission created with status Reported'
+            )
+
+            messages.success(request, 'Mission created successfully.')
+            return redirect('create_mission')  # Adjust the redirect as needed
+    else:
+        form = MissionForm()
+
+    return render(request, 'mission/create_mission.html', {'form': form})
 #-------------------------------------------------------------------------------------------------
+

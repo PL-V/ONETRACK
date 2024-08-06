@@ -32,28 +32,13 @@ class Vulnerability(models.Model):
     reported_by = models.ForeignKey(User, related_name='reported_vulnerabilities', on_delete=models.CASCADE)
     assigned_to = models.ForeignKey(User, related_name='assigned_vulnerabilities', on_delete=models.CASCADE, null=True, blank=True)
     verified_by = models.ForeignKey(User, related_name='verified_vulnerabilities', on_delete=models.CASCADE, null=True, blank=True)
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
+    asset = models.ManyToManyField(Asset)
 
     class Meta:
         db_table = 'vulnerability'
 
 
 class Mission(models.Model):
-    mission_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    status = models.ForeignKey('Status', on_delete=models.CASCADE, null=True)  # Changed field
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
-    vulnerability = models.ForeignKey(Vulnerability, on_delete=models.CASCADE)
-    priority = models.CharField(max_length=255)
-    due_date = models.DateField()
-    created_date = models.DateField(auto_now_add=True)
-    closed_date = models.DateField(null=True, blank=True)
-
-    class Meta:
-        db_table = 'mission'
-
-
-class Status(models.Model):
-    status_id = models.AutoField(primary_key=True)
     status_choices = [
         ('Reported', 'Reported'),
         ('Assigned', 'Assigned'),
@@ -63,10 +48,17 @@ class Status(models.Model):
         ('Verified', 'Verified'),
         ('Closed', 'Closed'),
     ]
-    status = models.CharField(max_length=20, choices=status_choices)
+    mission_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    status = models.CharField(max_length=20, choices=status_choices, null=True)
+    asset = models.ManyToManyField(Asset)
+    vulnerability = models.ForeignKey(Vulnerability, on_delete=models.CASCADE)
+    priority = models.CharField(max_length=255)
+    due_date = models.DateField()
+    created_date = models.DateField(auto_now_add=True)
+    closed_date = models.DateField(null=True, blank=True)
 
     class Meta:
-        db_table = 'status'
+        db_table = 'mission'
 
 
 class MissionHistory(models.Model):

@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Report Vulnerability {% endblock %}
+{% block title %} Create New Mission {% endblock %}
 
 {% block stylesheets %}
 <style>
@@ -46,7 +46,7 @@
   .form-group {
     margin-bottom: 15px;
   }
-  .form-control {
+  .form-control, .form-check-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ced4da;
@@ -54,6 +54,11 @@
     box-sizing: border-box;
     background-color: #3e4050;
     color: #f8f9fa;
+  }
+  .form-check-label {
+    color: #f8f9fa;
+    display: block;
+    margin-bottom: 5px;
   }
   .btn {
     background-color: #007bff;
@@ -82,21 +87,8 @@
     background-color: #dff0d8;
     border-color: #d6e9c6;
   }
-  select.form-control {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-color: #3e4050;
-    color: #f8f9fa;
-  }
-  select.form-control option {
-    background-color: #3e4050;
-    color: #f8f9fa;
-  }
 </style>
 {% endblock stylesheets %}
-
-{% load form_tags %}
 
 {% block content %}
 <div class="main-container">
@@ -110,42 +102,42 @@
     {% endif %}
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title">Report Vulnerability</h4>
+        <h4 class="card-title">Create New Mission</h4>
       </div>
       <div class="card-body">
-        <form method="post" action="{% url 'report_vulnerability' %}">
+        <form method="post" action="{% url 'create_mission' %}">
           {% csrf_token %}
           <div class="form-group">
             {{ form.vuln_name.label_tag }}
-            {{ form.vuln_name|add_class:"form-control" }}
+            {{ form.vuln_name }}
           </div>
           <div class="form-group">
             {{ form.vuln_type.label_tag }}
-            {{ form.vuln_type|add_class:"form-control" }}
+            {{ form.vuln_type }}
           </div>
           <div class="form-group">
             {{ form.vuln_severity.label_tag }}
-            {{ form.vuln_severity|add_class:"form-control" }}
+            {{ form.vuln_severity }}
           </div>
           <div class="form-group">
             {{ form.vuln_description.label_tag }}
-            {{ form.vuln_description|add_class:"form-control" }}
+            {{ form.vuln_description }}
           </div>
           <div class="form-group">
             {{ form.cve.label_tag }}
-            {{ form.cve|add_class:"form-control" }}
+            {{ form.cve }}
           </div>
           <div class="form-group">
             {{ form.risk.label_tag }}
-            {{ form.risk|add_class:"form-control" }}
+            {{ form.risk }}
           </div>
           <div class="form-group">
             {{ form.source.label_tag }}
-            {{ form.source|add_class:"form-control" }}
+            {{ form.source }}
           </div>
           <div class="form-group">
-            {{ form.asset.label_tag }}
-            {{ form.asset|add_class:"form-control" }}
+            {{ form.assets.label_tag }}
+            {{ form.assets }}
           </div>
           <button type="submit" class="btn">Submit</button>
         </form>

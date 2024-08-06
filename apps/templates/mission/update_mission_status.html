@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Update Mission Status {% endblock %}
+{% block title %}Update Mission Status{% endblock %}
 
 {% block content %}
 <div class="content">
@@ -8,8 +8,8 @@
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
-            {{ form.state.label_tag }}
-            {{ form.state }}
+            {{ form.status.label_tag }}
+            {{ form.status }}
         </div>
         <button type="submit" class="btn btn-primary">Update Status</button>
     </form>

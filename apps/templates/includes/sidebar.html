@@ -1,70 +1,81 @@
-
-    <div class="sidebar">
-        <!--
-          Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
-      -->
-        <div class="sidebar-wrapper">
-            <div class="logo">
-                <a href="javascript:void(0)" class="simple-text logo-mini">
-                    N+
-                </a>
-                <a href="javascript:void(0)" class="simple-text logo-normal">
-                    OneTrack
-                </a>
-            </div>
-            <ul class="nav">
-                {% comment %} <li class="{% if 'index' in segment %} active {% endif %} ">
-                    <a href="/">
-                        <i class="tim-icons icon-chart-pie-36"></i>
-                        <p>Tracking</p>
-                    </a>
-                </li> {% endcomment %}
-                <li>
-                    <a href={% url 'mission_list' %}>
-                        <i class="tim-icons icon-atom"></i>
-                        <p>Missions</p>
-                    </a>
-                </li>
-                <li>
-                    <a href={% url 'report_vulnerability' %}>
-                        <i class="tim-icons icon-atom"></i>
-                        <p>Reporting</p>
-                    </a>
-                </li>
-                <li>
-                    <a href={% url 'assigned_vulnerabilities' %}>
-                        <i class="tim-icons icon-atom"></i>
-                        <p>Remediation</p>
-                    </a>
-                </li>
-                <li >
-                    <a href={% url 'vulnerability_list' %}>
-                        <i class="tim-icons icon-puzzle-10"></i>
-                        <p>Vulnerabilities</p>
-                    </a>
-                </li>
-                {% if user.is_superuser %}
-                <li>
-                    <a href="{% url 'admin:index' %}">
-                        <i class="tim-icons icon-settings"></i>
-                        <p>Admin</p>
-                    </a>
-                </li>
-                {% endif %}
-                {% comment %}      
-                <li class="{% if 'notifications' in segment %} active {% endif %}">
-                    <a href="/notifications.html">
-                        <i class="tim-icons icon-bell-55"></i>
-                        <p>Notifications</p>
-                    </a>
-                </li> {% endcomment %}
-        
-                <li>
-                    <a href="{% url 'login' %}">
-                        <i class="tim-icons icon-button-power"></i>
-                        <p>Logout</p>
-                    </a>
-                </li>
-            </ul>
+<div class="sidebar">
+    <!--
+      Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
+    -->
+    <div class="sidebar-wrapper">
+        <div class="logo">
+            <a href="javascript:void(0)" class="simple-text logo-mini">
+                N+
+            </a>
+            <a href="javascript:void(0)" class="simple-text logo-normal">
+                OneTrack
+            </a>
         </div>
+        <ul class="nav">
+            {% comment %} {% if 'Owner' in user_roles or user.is_superuser or 'Remediator' in user_roles %} {% endcomment %}
+            <li>
+                <a href={% url 'mission_list' %}>
+                    <i class="tim-icons icon-bullet-list-67"></i>
+                    <p>Missions</p>
+                </a>
+            </li>
+
+            {% if 'Reporter' in user_roles or user.is_superuser %}
+            <li>
+                <a href={% url 'create_mission' %}>
+                    <i class="tim-icons icon-simple-add"></i>
+                    <p>New Mission</p>
+                </a>
+            </li>
+            {% endif %}
+
+            <li>
+                <a href={% url 'report_vulnerability' %}>
+                    <i class="tim-icons icon-alert-circle-exc"></i>
+                    <p>Reporting</p>
+                </a>
+            </li>
+
+            <li>
+                <a href={% url 'vulnerability_list' %}>
+                    <i class="icon-alert-circle-exc"></i>
+                    <p>Vulnerabilities</p>
+                </a>
+            </li>
+
+            {% if user.is_superuser %}
+            <li>
+                <a href="{% url 'admin:index' %}">
+                    <i class="tim-icons icon-settings-gear-63"></i>
+                    <p>Administration</p>
+                </a>
+            </li>
+            {% endif %}
+
+            <li>
+                <a href="{% url 'login' %}">
+                    <i class="tim-icons icon-button-power"></i>
+                    <p>Logout</p>
+                </a>
+            </li>
+
+            {% comment %}      
+            <li class="{% if 'notifications' in segment %} active {% endif %}">
+                <a href="/notifications.html">
+                    <i class="tim-icons icon-bell-55"></i>
+                    <p>Notifications</p>
+                </a>
+            </li> 
+            {% endcomment %}
+
+            {% comment %} 
+            <li class="{% if 'index' in segment %} active {% endif %}">
+                <a href="/">
+                    <i class="tim-icons icon-chart-pie-36"></i>
+                    <p>Tracking</p>
+                </a>
+            </li>
+            {% endcomment %}
+        </ul>
     </div>
+</div>
