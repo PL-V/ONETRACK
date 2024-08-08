@@ -1,0 +1,51 @@
+<!-- templates/assets_list.html -->
+{% extends "layouts/base.html" %}
+
+{% block title %}Assets List{% endblock %}
+
+{% block content %}
+<div class="content">
+    {% if messages %}
+        <div class="alert alert-success" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <h2>Assets List</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Owner</th>
+                <th>IP Address</th>
+                <th>Site</th>
+                <th>Classification</th>
+                <th>Platform</th>
+                <th>Location</th>
+                <th>Serial Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asset in assets %}
+            <tr>
+                <td>{{ asset.asset_id }}</td>
+                <td>{{ asset.asset_name }}</td>
+                <td>{{ asset.asset_category }}</td>
+                <td>{{ asset.asset_type }}</td>
+                <td>{{ asset.owner.username }}</td>
+                <td>{{ asset.ip_address }}</td>
+                <td>{{ asset.site }}</td>
+                <td>{{ asset.classification }}</td>
+                <td>{{ asset.platform }}</td>
+                <td>{{ asset.location }}</td>
+                <td>{{ asset.serial_number }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

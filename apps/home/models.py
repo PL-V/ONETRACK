@@ -7,7 +7,7 @@ class Asset(models.Model):
     asset_name = models.CharField(max_length=255)
     asset_category = models.CharField(max_length=255)
     asset_type = models.CharField(max_length=255)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_assets', null=True, blank=True)
     ip_address = models.GenericIPAddressField()
     site = models.CharField(max_length=255)
     classification = models.CharField(max_length=255)

@@ -92,6 +92,7 @@
 
 {% block content %}
 <div class="main-container">
+  {% if 'Reporter' in user_roles or user.is_superuser%}
   <div class="content">
     {% if messages %}
       {% for message in messages %}
@@ -144,6 +145,11 @@
       </div>
     </div>
   </div>
+  {% else %}
+  <div class="alert alert-warning" style="text-align: center; max-width: 850px; margin-top: 50px auto; padding: 20px; border-radius: 5px;">
+      <strong>Access Denied:</strong> You do not have the necessary privileges (reporter role) to craete a new mission. Please contact an administrator if you believe this is an error.
+  </div>  
+  {% endif %}
 </div>
 {% endblock content %}
 

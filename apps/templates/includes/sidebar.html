@@ -1,8 +1,5 @@
 <div class="sidebar">
-    <!--
-      Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
-    -->
-    <div class="sidebar-wrapper">
+    <div class="sidebar-wrapper" >
         <div class="logo">
             <a href="javascript:void(0)" class="simple-text logo-mini">
                 N+
@@ -12,7 +9,6 @@
             </a>
         </div>
         <ul class="nav">
-            {% comment %} {% if 'Owner' in user_roles or user.is_superuser or 'Remediator' in user_roles %} {% endcomment %}
             <li>
                 <a href={% url 'mission_list' %}>
                     <i class="tim-icons icon-bullet-list-67"></i>
@@ -20,16 +16,14 @@
                 </a>
             </li>
 
-            {% if 'Reporter' in user_roles or user.is_superuser %}
             <li>
                 <a href={% url 'create_mission' %}>
                     <i class="tim-icons icon-simple-add"></i>
                     <p>New Mission</p>
                 </a>
             </li>
-            {% endif %}
 
-            <li>
+            <li class="{% if request.resolver_match.url_name == 'report_vulnerability' %}active{% endif %}">
                 <a href={% url 'report_vulnerability' %}>
                     <i class="tim-icons icon-alert-circle-exc"></i>
                     <p>Reporting</p>
@@ -37,12 +31,21 @@
             </li>
 
             <li>
-                <a href={% url 'vulnerability_list' %}>
+                <a href={% url 'asset_list' %}>
                     <i class="icon-alert-circle-exc"></i>
-                    <p>Vulnerabilities</p>
+                    <p>Assets</p>
                 </a>
             </li>
 
+            
+            {% if user.is_superuser %}
+            <li>
+                <a href="{% url 'assign_asset_owner' %}">
+                    <i class="tim-icons icon-settings-gear-63"></i>
+                    <p>Asset owner Assigning</p>
+                </a>
+            </li>
+            {% endif %}
             {% if user.is_superuser %}
             <li>
                 <a href="{% url 'admin:index' %}">
@@ -51,14 +54,21 @@
                 </a>
             </li>
             {% endif %}
-
+            
             <li>
                 <a href="{% url 'login' %}">
                     <i class="tim-icons icon-button-power"></i>
                     <p>Logout</p>
                 </a>
             </li>
-
+            
+            {% comment %} <li>
+                <a href={% url 'vulnerability_list' %}>
+                    <i class="icon-alert-circle-exc"></i>
+                    <p>Vulnerabilities</p>
+                </a>
+            </li> {% endcomment %}
+            
             {% comment %}      
             <li class="{% if 'notifications' in segment %} active {% endif %}">
                 <a href="/notifications.html">

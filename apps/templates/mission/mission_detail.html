@@ -48,11 +48,28 @@
             <td>{{ mission.created_date }}</td>
         </tr>
     </table>
-    {% if 'Owner' in user_roles or user.is_superuser %}
+    {% if is_owner_of_affected_assets or user.is_superuser %}
         <a href="{% url 'assign_mission' mission.mission_id %}" class="btn btn-primary">Assign to Remediator</a>
     {% endif %}
+
     {% if mission.status == 'Assigned' and 'Remediator' in user_roles or mission.status == 'Assigned' and user.is_superuser %}
-        <a href="{% url 'start_remediation' mission.mission_id %}" class="btn btn-primary">Start Remediation</a>
+    <a href="{% url 'start_remediation' mission.mission_id %}" class="btn btn-primary">Start Remediation</a>
+    {% endif %}
+
+    {% if mission.status == 'In Remediation' and 'Remediator' in user_roles or mission.status == 'In Remediation' and user.is_superuser %}
+    <a href="{% url 'ending_remediation' mission.mission_id %}" class="btn btn-primary">End the Remediation</a>
+    {% endif %}
+
+    {% if is_owner_of_affected_assets or user.is_superuser %}
+        <a href="{% url 'close_mission' mission.mission_id %}" class="btn btn-primary">End Mission</a>
+    {% endif %}
+    
+    {% if mission.status == 'Remediated' and 'Verifier' in user_roles or mission.status == 'Remediated' and user.is_superuser %}
+        <a href="{% url 'start_verfication' mission.mission_id %}" class="btn btn-primary">Start verfication</a>
+    {% endif %}
+
+    {% if mission.status == 'In Verification' and 'Verifier' in user_roles or mission.status == 'In Verification' and user.is_superuser %}
+        <a href="{% url 'ending_verfication' mission.mission_id %}" class="btn btn-primary">End the verfication</a>
     {% endif %}
 </div>
 {% endblock %}

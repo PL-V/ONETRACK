@@ -20,14 +20,6 @@ class VulnerabilityForm(forms.ModelForm):
 
 
 
-class MissionStatusForm(forms.ModelForm):
-    class Meta:
-        model = Mission
-        fields = ['status']
-        widgets = {
-            'status': forms.Select(choices=Mission.status_choices)
-        }
-
 class MissionAssignForm(forms.ModelForm):
     assigned_to = forms.ModelChoiceField(queryset=User.objects.filter(roles__name='Remediator'), label="Assign to Remediator")
 
@@ -45,3 +37,8 @@ class MissionForm(forms.Form):
     risk = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     source = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     assets = forms.ModelMultipleChoiceField(queryset=Asset.objects.all(), widget=forms.CheckboxSelectMultiple)
+
+
+class AssetOwnerAssignForm(forms.Form):
+    assets = forms.ModelMultipleChoiceField(queryset=Asset.objects.all(), widget=forms.CheckboxSelectMultiple)
+    owner = forms.ModelChoiceField(queryset=User.objects.filter(roles__name='Owner'))

@@ -57,7 +57,7 @@
 
 {% block content %}
 <div class="container">
-    {% if 'Owner' in user_roles or user.is_superuser or 'Remediator' in user_roles %}
+    {% if 'Owner' in user_roles or user.is_superuser or 'Remediator' in user_roles or 'Verifier' in user_roles%}
     <div class="table-container">
         {% if 'Remediator' in user_roles %}
             <h2>Mission List</h2>
