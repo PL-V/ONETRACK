@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Verification Issue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .email-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+        .email-header {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #FF4081; /* Pink color to match your template */
+            text-align: center;
+        }
+        .email-content {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .email-content p {
+            margin: 0 0 10px;
+        }
+        .email-footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .email-footer a {
+            text-decoration: none;
+            color: #ffffff;
+            background-color: #FF4081;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            Mission Verification Issue
+        </div>
+        <div class="email-content">
+            <p>Dear {{ owner.first_name }},</p>
+
+            <p>We would like to inform you that there was an issue during the verification process for the mission titled <strong>{{ mission.title }}</strong>.</p>
+
+            <p><strong>Issue Description:</strong></p>
+            <p>{{ issue_description }}</p>
+
+            <p>Please review the mission details and take the necessary actions to address the problem.</p>
+        </div>
+        <div class="email-footer">
+            <a href="{{ mission_link }}">View Mission Details</a>
+        </div>
+    </div>
+</body>
+</html>

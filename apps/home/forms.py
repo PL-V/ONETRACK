@@ -42,3 +42,23 @@ class MissionForm(forms.Form):
 class AssetOwnerAssignForm(forms.Form):
     assets = forms.ModelMultipleChoiceField(queryset=Asset.objects.all(), widget=forms.CheckboxSelectMultiple)
     owner = forms.ModelChoiceField(queryset=User.objects.filter(roles__name='Owner'))
+
+
+class VerificationOutcomeForm(forms.Form):
+    OUTCOME_CHOICES = [
+        ('successful', 'Successful'),
+        ('problem', 'Problem Detected'),
+    ]
+    
+    outcome = forms.ChoiceField(choices=OUTCOME_CHOICES, widget=forms.RadioSelect)
+    issue_description = forms.CharField(widget=forms.Textarea, required=False)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        outcome = cleaned_data.get('outcome')
+        issue_description = cleaned_data.get('issue_description')
+        
+        if outcome == 'problem' and not issue_description:
+            raise forms.ValidationError("Please provide a description of the issue.")
+        
+        return cleaned_data

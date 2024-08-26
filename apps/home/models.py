@@ -17,6 +17,9 @@ class Asset(models.Model):
 
     class Meta:
         db_table = 'asset'
+    
+    def __str__(self):
+        return self.asset_name
 
 
 class Vulnerability(models.Model):
@@ -53,7 +56,7 @@ class Mission(models.Model):
     asset = models.ManyToManyField(Asset)
     vulnerability = models.ForeignKey(Vulnerability, on_delete=models.CASCADE)
     priority = models.CharField(max_length=255)
-    due_date = models.DateField()
+    due_date = models.DateField(null=True, blank=True)
     created_date = models.DateField(auto_now_add=True)
     closed_date = models.DateField(null=True, blank=True)
 
@@ -66,7 +69,16 @@ class MissionHistory(models.Model):
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     change_date = models.DateTimeField(auto_now_add=True)
-    state_on_change_date = models.CharField(max_length=255)
+    status_choices = [
+        ('Reported', 'Reported'),
+        ('Assigned', 'Assigned'),
+        ('In Remediation', 'In Remediation'),
+        ('Remediated', 'Remediated'),
+        ('In Verification', 'In Verification'),
+        ('Verified', 'Verified'),
+        ('Closed', 'Closed'),
+    ]
+    state_on_change_date = models.CharField(max_length=40, choices=status_choices)
 
     class Meta:
         db_table = 'mission_history'
@@ -85,28 +97,24 @@ class Metric(models.Model):
     metric_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     value = models.FloatField()
-    mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
+    mission = models.ForeignKey(Mission, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         db_table = 'metric'
 
 
+class ScrapedVulnerability(models.Model):
+    vuln_id = models.AutoField(primary_key=True)
+    vuln_name = models.CharField(max_length=255,null=True, blank=True)
+    vuln_type = models.CharField(max_length=255,null=True, blank=True)
+    vuln_severity = models.CharField(max_length=255,null=True, blank=True)
+    vuln_description = models.TextField()
+    cve = models.CharField(max_length=255, null=True, blank=True)
+    source = models.CharField(max_length=255, null=True, blank=True)
+    scraped_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
-
-class ComponentType(models.Model):
-    id = models.AutoField(primary_key=True)
-    type = models.CharField(max_length=255)
-
+    def __str__(self):
+        return self.vuln_name
+    
     class Meta:
-        db_table = 'component_type'
-
-
-class Component(models.Model):
-    component_id = models.AutoField(primary_key=True)
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
-    component_type = models.ForeignKey(ComponentType, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    version = models.CharField(max_length=255)
-
-    class Meta:
-        db_table = 'component'
+        db_table = 'scraped_vulnerability'

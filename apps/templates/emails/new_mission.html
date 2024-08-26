@@ -6,10 +6,10 @@
 </head>
 <body>
     <p>Dear {{ owner.name }},</p>
-    <p>A new mission has been reported.</p>
+    <p>You are assigned to remediate the mission with id: {{mission.mission_id}}</p>
     <p><strong>Mission priority:</strong> {{ mission.priority }}</p>
     <p><strong>vuln_description Description:</strong> {{ mission.vulnerability.vuln_description }}</p>
-    <p>Please log in to OneTrack to view more details.</p>
+    <p>Please <a href="{{ mission_link }}">log in to OneTrack</a> to view more details.</p>
     <p>Best regards,<br>Your Team</p>
 </body>
 </html>

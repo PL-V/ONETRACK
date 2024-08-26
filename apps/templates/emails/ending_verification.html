@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Mission Reported</title>
+</head>
+<body>
+    <p>Dear {{ owner.name }},</p>
+    <p>the mission with id: {{mission.mission_id}} has been verified successfully with no issue.</p>
+    <p><strong>Mission priority:</strong> {{ mission.priority }}</p>
+    <p><strong>vuln_description Description:</strong> {{ mission.vulnerability.vuln_description }}</p>
+    <p>Please <a href="{{ mission_link }}">log in to OneTrack</a> to view more details.</p> 
+    <p>Best regards,<br>Your Team</p>
+</body>
+</html>

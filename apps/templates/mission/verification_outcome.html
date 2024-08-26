@@ -1,0 +1,163 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Verification Status{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .popup-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .popup-content {
+        background-color: #2C2C3C; /* Dark background color to match the template */
+        padding: 20px;
+        border-radius: 8px;
+        width: 450px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Adding some shadow for depth */
+    }
+
+    .popup-header {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        color: #FFFFFF; /* White text color for contrast */
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #C4C4C4; /* Light grey color for labels */
+    }
+
+    #problem_description_label,
+    .form-group textarea {
+        display: none;
+    }
+
+    .form-group textarea.show,
+    #problem_description_label.show {
+        display: block;
+    }
+
+    .form-group textarea {
+        width: 100%;
+        height: 80px;
+        background-color: #3B3B4F; /* Slightly lighter dark color */
+        color: #FFFFFF; /* White text color for contrast */
+        border: 1px solid #565676; /* Grey border to match the theme */
+        border-radius: 5px;
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .popup-footer {
+        text-align: right;
+    }
+
+    .popup-footer button {
+        padding: 10px 20px;
+        background-color: #FF4081; /* Pink button to match the template's accent color */
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .popup-footer button:hover {
+        background-color: #E0356F; /* Darker pink on hover for a better visual effect */
+    }
+
+    .alert {
+        padding: 15px;
+        background-color: #f44336; /* Red */
+        color: white;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .alert.success {background-color: #4CAF50;} /* Green */
+    .alert.warning {background-color: #ff9800;} /* Orange */
+    .alert.info {background-color: #2196F3;} /* Blue */
+    .alert.error {background-color: #f44336;} /* Red */
+
+    .closebtn {
+        margin-left: 15px;
+        color: white;
+        font-weight: bold;
+        float: right;
+        font-size: 22px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .closebtn:hover {
+        color: black;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="popup-container">
+    <div class="popup-content">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="popup-header">
+                Verification Completion
+            </div>
+            <form method="POST" action="{% url 'ending_verification' mission_id=mission.mission_id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Was the verification successful?</label>
+                    <input type="radio" name="outcome" value="successful" id="verification_passed"> Yes
+                    <input type="radio" name="outcome" value="problem" id="verification_problem"> No
+                </div>
+                <div class="form-group" id="problem_description_group">
+                    <label for="problem_description" id="problem_description_label">Describe the problem:</label>
+                    <textarea name="issue_description" id="problem_description"></textarea>
+                </div>
+                <div class="popup-footer">
+                    <button type="submit">Submit</button>
+                </div>
+            </form> 
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    const verificationPassed = document.getElementById('verification_passed');
+    const verificationProblem = document.getElementById('verification_problem');
+    const problemDescriptionGroup = document.getElementById('problem_description_group');
+    const problemDescriptionLabel = document.getElementById('problem_description_label');
+    const problemDescription = document.getElementById('problem_description');
+
+    verificationProblem.addEventListener('change', function () {
+        if (this.checked) {
+            problemDescriptionLabel.classList.add('show');
+            problemDescription.classList.add('show');
+        }
+    });
+
+    verificationPassed.addEventListener('change', function () {
+        if (this.checked) {
+            problemDescriptionLabel.classList.remove('show');
+            problemDescription.classList.remove('show');
+        }
+    });
+</script>
+{% endblock %}

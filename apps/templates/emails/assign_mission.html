@@ -8,8 +8,8 @@
     <p>Dear {{ assigned_user.name }},</p>
     <p>A new mission has been assigned to you.</p>
     <p><strong>Mission priority:</strong> {{ mission.priority }}</p>
-    <p><strong>vuln_description Description:</strong> {{ mission.vulnerability.vuln_description }}</p>
-    <p>Please log in to OneTrack to view more details.</p>
+    <p><strong>Description:</strong> {{ mission.vulnerability.vuln_description }}</p>
+    <p>Please <a href="{{ mission_link }}">log in to OneTrack</a> to view more details.</p>
     <p>Best regards,<br>Your Team</p>
 </body>
 </html>

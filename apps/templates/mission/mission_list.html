@@ -19,7 +19,7 @@
         width: 100%;
         max-width: 1200px;
         margin: 20px auto;
-        background-color: #1c1e29;
+        background-color: inherit;
         padding: 17px;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -27,18 +27,18 @@
     .table {
         width: 100%;
         margin: 0;
-        background-color: #2a2e37;
+        background-color: inherit;
         color: #f8f9fa;
     }
     .table thead th {
-        background-color: #343a40;
+        background-color: inherit;
         color: #ffffff;
     }
     .table tbody tr:nth-child(odd) {
-        background-color: #2a2e37;
+        background-color: inherit;
     }
     .table tbody tr:nth-child(even) {
-        background-color: #323742;
+        background-color: inherit;
     }
     .btn-primary {
         background-color: #e91e63;
@@ -57,11 +57,14 @@
 
 {% block content %}
 <div class="container">
-    {% if 'Owner' in user_roles or user.is_superuser or 'Remediator' in user_roles or 'Verifier' in user_roles%}
+    {% if 'Owner' in user_roles or user.is_superuser or 'Remediator' in user_roles or  'Verifier' in user_roles %}
     <div class="table-container">
         {% if 'Remediator' in user_roles %}
-            <h2>Mission List</h2>
+            <h2>Mission List: <h3>Remediation Section</h3></h2>
             <p>Here are the missions assigned to you for remediation. Take charge and secure our assets!</p>
+        {% elif 'Verifier' in user_roles %}
+            <h2>Mission List: <h3>Verification Section</h3></h2>
+            <p>Here are the missions that need to be verified or you started verifing them. Take charge and secure our assets!</p>
         {% else %}
             <h2>Mission List</h2>
             <p>Welcome to the mission overview. Here, you can see all active missions and track the progress in fortifying our defenses.</p>
@@ -73,7 +76,7 @@
                     <th>Status</th>
                     <th>Vulnerability</th>
                     <th>Priority</th>
-                    <th>Due Date</th>
+                    <th>Created Date</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -84,7 +87,7 @@
                     <td>{{ mission.status }}</td>
                     <td>{{ mission.vulnerability.vuln_name }}</td>
                     <td>{{ mission.priority }}</td>
-                    <td>{{ mission.due_date }}</td>
+                    <td>{{ mission.created_date }}</td>
                     <td>
                         <a href="{% url 'mission_detail' mission.mission_id %}" class="btn btn-primary btn-sm">View</a>
                     </td>
@@ -95,7 +98,7 @@
     </div>
     {% else %}
     <div class="alert alert-warning" style="text-align: center; max-width: 600px; margin: 50px auto; padding: 20px; border-radius: 5px;">
-        <strong>Access Denied:</strong> You do not have the necessary privileges to view this mission's details. Please contact an administrator if you believe this is an error.
+        <strong>Access Denied:</strong> You do not have the necessary privileges to view this mission list. Please contact an administrator if you believe this is an error.
     </div>    
     {% endif %}
 </div>

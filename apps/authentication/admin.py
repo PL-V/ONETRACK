@@ -44,4 +44,4 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(Role)
+# admin.site.register(Role)

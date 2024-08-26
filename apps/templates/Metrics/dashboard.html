@@ -1,0 +1,83 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Onetrack Metrics{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="sidebar">
+        {% include "includes/sidebar.html" %}
+    </div>
+
+    <div class="content">
+        <h2></h2>
+
+        <div class="metrics-grid">
+            {% for metric in metrics %}
+            {% if not metric.mission %}
+            <div class="metric-card">
+                <h3>{{ metric.name }}</h3>
+                <p>{{ metric.value }}</p>
+            </div>
+            {%endif%}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container and Layout Styles */
+    .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+        padding-left: 50px; 
+        
+    }
+
+    .sidebar {
+        width: 250px;
+        
+        padding: 20px;
+        height: 100vh;
+        position: fixed;
+    }
+
+    .content {
+        margin-left: 250px;
+        padding: 20px;
+        width: calc(100% - 250px);
+        color: #f0f0f0; /* Light text color for contrast */
+        display: flex;
+        flex-direction: column;
+        {% comment %} justify-content: center; /* Center content vertically */ {% endcomment %}
+        padding-top: 50px; /* Space at the top */
+    }
+
+    /* Metrics Grid Styles */
+    .metrics-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    /* Metric Card Styles */
+    .metric-card {
+        flex: 1 1 300px;
+        background-color: #2C2C2C; /* Dark card background */
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Darker shadow */
+        text-align: center;
+    }
+
+    .metric-card h3 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+        color: #E91E63; /* Vibrant accent color for headings */
+    }
+
+    .metric-card p {
+        font-size: 1.2em;
+        color: #9E9E9E; /* Muted light color for values */
+    }
+</style>
+{% endblock %}

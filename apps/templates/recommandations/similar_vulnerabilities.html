@@ -1,0 +1,117 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Similar Vulnerabilities{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .score {
+        color: purple;
+    }
+    .main-container {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .results-container {
+        width: 100%;
+        max-width: 800px;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: inherit;
+    }
+    
+
+    .results-container h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-weight: 600;
+        text-align: center;
+        color: inherit;
+    }
+    
+
+    .list-group-item {
+        background-color: inherit;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .list-group-item strong {
+        font-size: 18px;
+        color: inherit;
+    }
+
+    .list-group-item em {
+        font-weight: 500;
+        color: purple;
+    }
+
+    .list-group-item .recommended-tag {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .btn-secondary {
+        display: block;
+        width: 100%;
+        text-align: center;
+        background-color: #6c757d;
+        border: none;
+        padding: 10px;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="main-container">
+    <div class="results-container">
+        <h2>Search Results for: "{{ user_input }}"</h2>
+        {% if similar_vulnerabilities %}
+            <ul class="list-group">
+                {% for vuln, score in similar_vulnerabilities %}
+                    <li class="list-group-item">
+                        <strong>{{ vuln.vuln_name }}</strong> ({{ vuln.vuln_type }})<br>
+                        <em>Severity:</em> {{ vuln.vuln_severity }}<br>
+                        <em>Description:</em> {{ vuln.vuln_description }}<br>
+                        <em>CVE:</em> {{ vuln.cve }}<br>
+                        <em style="color: red" class="score">Similarity Score:</em> {{ score|floatformat:2 }}
+                        
+                        {% if forloop.first %}
+                            <div class="recommended-tag">Recommended</div>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No similar vulnerabilities found.</p>
+        {% endif %}
+        <a href="{% url 'search_similar_vulnerabilities' %}" class="btn btn-secondary mt-3">Search Again</a>
+    </div>
+</div>
+{% endblock %}

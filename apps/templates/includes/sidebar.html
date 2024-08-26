@@ -1,4 +1,4 @@
-<div class="sidebar">
+<div class="sidebar" style="color:blue">
     <div class="sidebar-wrapper" >
         <div class="logo">
             <a href="javascript:void(0)" class="simple-text logo-mini">
@@ -23,12 +23,12 @@
                 </a>
             </li>
 
-            <li class="{% if request.resolver_match.url_name == 'report_vulnerability' %}active{% endif %}">
+            {% comment %} <li class="{% if request.resolver_match.url_name == 'report_vulnerability' %}active{% endif %}">
                 <a href={% url 'report_vulnerability' %}>
                     <i class="tim-icons icon-alert-circle-exc"></i>
                     <p>Reporting</p>
                 </a>
-            </li>
+            </li> {% endcomment %}
 
             <li>
                 <a href={% url 'asset_list' %}>
@@ -37,12 +37,25 @@
                 </a>
             </li>
 
-            
+            <li>
+                <a href={% url 'metrics_dashboard' %}>
+                    <i class="tim-icons icon-chart-bar-32"></i>
+                    <p>Metrics</p>
+                </a>
+            </li>
+
+            <li>
+                <a href={% url 'search_similar_vulnerabilities' %}>
+                    <i class="tim-icons icon-chart-pie-36"></i>
+                    <p>Recommandations</p>
+                </a>
+            </li>
+
             {% if user.is_superuser %}
             <li>
                 <a href="{% url 'assign_asset_owner' %}">
                     <i class="tim-icons icon-settings-gear-63"></i>
-                    <p>Asset owner Assigning</p>
+                    <p>Asset owner</p>
                 </a>
             </li>
             {% endif %}

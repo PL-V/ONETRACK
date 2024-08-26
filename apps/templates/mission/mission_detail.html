@@ -32,23 +32,53 @@
             </td>
         </tr>
         <tr>
-            <th>Vulnerability</th>
+            <th>Vulnerability Name</th>
             <td>{{ mission.vulnerability.vuln_name }}</td>
         </tr>
         <tr>
-            <th>Priority</th>
+            <th>Vulnerability Type</th>
+            <td>{{ mission.vulnerability.vuln_type }}</td>
+        </tr>
+        <tr>
+            <th>Vulnerability Description</th>
+            <td>{{ mission.vulnerability.vuln_description }}</td>
+        </tr>
+        <tr>
+            <th>Vulnerability CVE</th>
+            <td>{{ mission.vulnerability.cve }}</td>
+        </tr>
+        <tr>
+            <th>Vulnerability source</th>
+            <td>{{ mission.vulnerability.source }}</td>
+        </tr>
+        <tr>
+            <th>Vulnerability Severity </th>
             <td>{{ mission.priority }}</td>
         </tr>
         <tr>
-            <th>Due Date</th>
-            <td>{{ mission.due_date }}</td>
+            <th>Vulnerability risk</th>
+            <td>{{ mission.vulnerability.risk}}</td>
         </tr>
+        {% if is_owner_of_affected_assets or user.is_superuser %}
+        <tr>
+            <th>Vulnerability reported_by</th>
+            <td>{{ mission.vulnerability.reported_by }}</td>
+        </tr>
+        <tr>
+            <th>Vulnerability assigned_to</th>
+            <td>{{ mission.vulnerability.assigned_to }}</td>
+        </tr>
+        <tr>
+            <th>Vulnerability verified_by</th>
+            <td>{{ mission.vulnerability.verified_by }}</td>
+        </tr>
+        {% endif %}
         <tr>
             <th>Created Date</th>
             <td>{{ mission.created_date }}</td>
         </tr>
     </table>
-    {% if is_owner_of_affected_assets or user.is_superuser %}
+    {% if is_owner_of_affected_assets and mission.status == 'Reported' or user.is_superuser and mission.status == 'Reported' %}
         <a href="{% url 'assign_mission' mission.mission_id %}" class="btn btn-primary">Assign to Remediator</a>
     {% endif %}
 
@@ -57,7 +87,7 @@
     {% endif %}
 
     {% if mission.status == 'In Remediation' and 'Remediator' in user_roles or mission.status == 'In Remediation' and user.is_superuser %}
-    <a href="{% url 'ending_remediation' mission.mission_id %}" class="btn btn-primary">End the Remediation</a>
+    <a href="{% url 'ending_remediation' mission.mission_id %}" class="btn btn-primary">End Remediation</a>
     {% endif %}
 
     {% if is_owner_of_affected_assets or user.is_superuser %}
@@ -65,11 +95,11 @@
     {% endif %}
     
     {% if mission.status == 'Remediated' and 'Verifier' in user_roles or mission.status == 'Remediated' and user.is_superuser %}
-        <a href="{% url 'start_verfication' mission.mission_id %}" class="btn btn-primary">Start verfication</a>
+        <a href="{% url 'start_verification' mission.mission_id %}" class="btn btn-primary">Start verfication</a>
     {% endif %}
 
-    {% if mission.status == 'In Verification' and 'Verifier' in user_roles or mission.status == 'In Verification' and user.is_superuser %}
-        <a href="{% url 'ending_verfication' mission.mission_id %}" class="btn btn-primary">End the verfication</a>
+    {% if mission.status == 'In Verification' and 'Verifier'  in user_roles and mission.vulnerability.verified_by == user or mission.status == 'In Verification' and user.is_superuser %}
+        <a href="{% url 'ending_verification' mission.mission_id %}" class="btn btn-primary">End the verfication</a>
     {% endif %}
 </div>
 {% endblock %}

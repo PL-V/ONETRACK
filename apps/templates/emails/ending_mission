@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Mission Closed</title>
+</head>
+<body>
+    <p>Dear {{ userToNotify.name }},</p>
+    <p>the mission with id: {{mission.mission_id}} has seccesfully completed the process, it's ended</p>
+    <p><strong>Mission priority:</strong> {{ mission.priority }}</p>
+    <p><strong>vuln_description Description:</strong> {{ mission.vulnerability.vuln_description }}</p>
+    <p>Best regards,<br>Your Team</p>
+</body>
+</html>
